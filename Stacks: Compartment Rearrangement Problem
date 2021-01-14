@@ -1,0 +1,125 @@
+#include <iostream>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <sstream>
+#include <cstdlib>
+#include <stack>
+
+using namespace std;
+vector <int> popped;
+
+
+bool check(int n){
+    vector<int> pushed(n);
+    stack<int>st;
+   
+    for(int i = 0 ; i < n ; i++)
+            pushed[i] = i+1;
+    
+        int i=0,j=0;
+        while(i<pushed.size() and j<popped.size())
+        {
+            if(pushed[i]==popped[j])
+            {
+                i++;
+                j++;
+            }
+            else
+            {
+                if(!st.empty() and st.top()==popped[j])  
+                {
+                    st.pop();
+                    j++;
+                }
+                else
+                {
+                    st.push(pushed[i++]);
+                }
+            }
+        }
+        while(j<popped.size())  //if still j is less than popped vector size, then check for the top of the stack and with current popped vector element
+        {
+            if(!st.empty() and st.top()==popped[j])
+            {
+                st.pop();
+                j++;
+            }
+            else
+                break;
+        }
+        if(st.empty() and j==popped.size()) return true;
+        return false;
+    }
+    
+
+
+
+void solve(vector<vector<int>> A, int rows , int cols, int n ){
+
+    for(int i = 0 ; i < rows; i++){
+        for(int j = 0 ; j < cols; j++){
+            //cout<<A[i][j]<<" ";
+            int number = A[i][j];
+            //cout<<number<<" ";
+            popped.push_back(number);
+
+        }
+
+        bool x = check(n);
+        if(x){
+        cout<<"Yes"<<"\n";
+        }
+        else{
+        cout<<"No"<<"\n";
+        }
+        popped.clear();
+        //cout<<"\n";
+    }
+// print blank line after every block line ends
+    cout<<"\n";
+}
+
+int main()
+{
+    int n;
+    int ele;
+    cin >> n;
+    while (n!=0)
+    {
+        vector<vector<int>> A;
+
+        while(true){
+            cin>>ele;
+            vector<int> temp;
+            if(ele == 0){
+                break;
+            }
+             temp.push_back(ele);
+
+             for(int j = 1; j < n; j++){
+                 cin>>ele;
+                 temp.push_back(ele);
+             }
+
+             A.push_back(temp);
+        }
+        int p = A.size();
+        if(p == 0){
+            solve(A,0,0,n);
+        } 
+        else{
+        
+        int q = A[0].size();
+        solve(A,p,q,n);
+        }
+        cin>>n;
+    }
+    return 0;
+}
+
+
+
